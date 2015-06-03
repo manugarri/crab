@@ -12,8 +12,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 
 import markupsafe
+
+def whitelabel_command(command):
+    try:
+        pattern = 'modules/(.*)/.*py'
+        return re.search(pattern, command, flags=0).group()
+    except Exception as e:
+        return e
 
 def abbr(text, limit=60, tolerance=10):
     """Returns an abbreviated and HTML-escaped version of the specified text.

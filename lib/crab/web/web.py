@@ -13,21 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
 import json
-import mimetypes
-import os
 import re
-import time
 
 import cherrypy
 from cherrypy import HTTPError, HTTPRedirect
 from mako import exceptions
 from mako.lookup import TemplateLookup
-from mako.template import Template
 
 from crab import CrabError, CrabStatus
 from crab.util.filter import CrabEventFilter
+from crab.util.web import whitelabel_command
 
 def empty_to_none(value):
     if value == '':
@@ -98,9 +94,8 @@ class CrabWeb:
         try:
             jobs = self.store.get_jobs()
             # we dont want to expose envvars to everyone because blah bleh blih
-            pattern = 'modules/(.*)/.*py'
             for job in jobs:
-                job['command'] = re.search(pattern, job['command'], flags=0).group()
+                job['command'] = whitelabel_command(job.get('command')) 
             return self._write_template('joblist.html', {'jobs': jobs})
 
         except CrabError as err:
@@ -188,7 +183,7 @@ class CrabWeb:
                                    config['configid'])
             else:
                 notification = None
-
+            info['command'] = whitelabel_command(info.get('command'))
             return self._write_template('job.html',
                        {'id': id_, 'info': info, 'config': config,
                         'status': self.monitor.get_job_status(id_),
