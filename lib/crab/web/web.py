@@ -97,6 +97,10 @@ class CrabWeb:
 
         try:
             jobs = self.store.get_jobs()
+            # we dont want to expose envvars to everyone because blah bleh blih
+            pattern = 'modules/(.*)/.*py'
+            for job in jobs:
+                job['command'] = re.search(pattern, job['command'], flags=0).group()
             return self._write_template('joblist.html', {'jobs': jobs})
 
         except CrabError as err:
