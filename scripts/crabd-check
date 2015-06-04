@@ -52,3 +52,5 @@ LOGFILE=$LOGDIR/crabd-$UID.log
 #crabd --pidfile $PIDFILE >> $LOGFILE 2>&1 &
 killall crabd
 crabd
+sleep 3
+crab import
