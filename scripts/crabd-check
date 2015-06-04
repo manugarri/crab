@@ -49,5 +49,6 @@ LOGFILE=$LOGDIR/crabd-$UID.log
 
 # Launch crabd using its own PID file mechanism.
 
-crabd --pidfile $PIDFILE >> $LOGFILE 2>&1 &
-
+#crabd --pidfile $PIDFILE >> $LOGFILE 2>&1 &
+killall crabd
+crabd
