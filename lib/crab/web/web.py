@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import json
 import re
 
@@ -95,8 +96,9 @@ class CrabWeb:
             jobs = self.store.get_jobs()
             # we dont want to expose envvars to everyone because blah bleh blih
             for job in jobs:
-                job['command'] = whitelabel_command(job.get('command')) 
-            return self._write_template('joblist.html', {'jobs': jobs})
+                job['command'] = whitelabel_command(job.get('command'))
+            return self._write_template('joblist.html', {'jobs': jobs,
+                          'environment':os.environ.get('METRICS_ENV')})
 
         except CrabError as err:
             raise HTTPError(message=str(err))
