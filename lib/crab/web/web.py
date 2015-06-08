@@ -170,7 +170,8 @@ class CrabWeb:
             if barerows is not None:
                 return self._write_template('jobevents.html',
                            {'id': id_, 'events': events,
-                            'lastdatetime': lastdatetime})
+                            'lastdatetime': lastdatetime,
+                          'environment':os.environ.get('METRICS_ENV')})
 
             # Try to convert the times to the timezone shown on the page.
             info['installed'] = filter.in_timezone(info['installed'])
@@ -190,7 +191,8 @@ class CrabWeb:
                        {'id': id_, 'info': info, 'config': config,
                         'status': self.monitor.get_job_status(id_),
                         'notification': notification, 'events': events,
-                        'lastdatetime': lastdatetime})
+                        'lastdatetime': lastdatetime,
+                          'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'clear':
             if submit_confirm:
@@ -211,7 +213,8 @@ class CrabWeb:
                        {'id': id_, 'info': info,
                         'title': 'clear status',
                         'description': 'Reset the job status?',
-                        'target': '/job/' + str(id_) + '/clear'})
+                        'target': '/job/' + str(id_) + '/clear',
+                          'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'uninhibit':
             if submit_confirm:
@@ -223,7 +226,8 @@ class CrabWeb:
                 return self._write_template('confirm.html',
                     {'id': id_, 'info': info, 'title': 'resume',
                      'description': 'Resume inhibited job?',
-                     'target': '/job/' + str(id_) + '/uninhibit'})
+                     'target': '/job/' + str(id_) + '/uninhibit',
+                     'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'delete':
             notdeleted = info['deleted'] is None
@@ -244,7 +248,8 @@ class CrabWeb:
                        'title': 'delete' if notdeleted else 'undelete',
                        'description': ('Delete' if notdeleted else 'Undelete') +
                                        ' this job from the server?',
-                       'target': '/job/' + str(id_) + '/delete'})
+                       'target': '/job/' + str(id_) + '/delete',
+                          'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'changeid':
             if submit_confirm:
@@ -275,7 +280,8 @@ class CrabWeb:
                                       'or in the cron job itself in the case '
                                       'of Crab-aware cron jobs.',
                        'target': '/job/' + str(id_) + '/changeid',
-                       'data': {'crabid': crabid}})
+                       'data': {'crabid': crabid},
+                       'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'output':
             finishid_next = None
@@ -323,7 +329,8 @@ class CrabWeb:
             return self._write_template('joboutput.html',
                        {'id': id_, 'info': info, 'finish': finish,
                         'stdout': stdout, 'stderr': stderr,
-                        'next': finishid_next, 'prev': finishid_prev})
+                        'next': finishid_next, 'prev': finishid_prev,
+                        'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'config':
             if submit_relink:
@@ -378,7 +385,8 @@ class CrabWeb:
 
                 return self._write_template('jobconfig.html',
                            {'id': id_, 'info': info, 'config': config,
-                            'orphan': orphan})
+                            'orphan': orphan,
+                          'environment':os.environ.get('METRICS_ENV')})
 
         elif command == 'notify':
             if submit_notify:
@@ -441,7 +449,8 @@ class CrabWeb:
                 return self._write_template('editnotify.html',
                             {'match_mode': False,
                              'id': id_, 'info': info,
-                             'notifications': notifications})
+                             'notifications': notifications,
+                             'environment':os.environ.get('METRICS_ENV')})
 
         else:
             raise HTTPError(404, 'Unknown job command')
